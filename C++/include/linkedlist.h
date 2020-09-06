@@ -1,3 +1,8 @@
+#ifndef LINKEDLIST_H_INCLUDED
+#define LINKEDLIST_H_INCLUDED
+
+#include <string>
+#include <exception>
 #include <cstddef>
 #include <cstdint>
 
@@ -74,7 +79,31 @@ namespace dsalib
             }
         };
         LinkedList(){head=NULL; tail=NULL; size=0;}
-        uint64_t get_size(){
+        T operator [](uint64_t index){
+            LinkedListNode<T> *p=head;
+            for(uint64_t i=0; i<index; ++i){
+                if(p)
+                    p=p->next;
+                else
+                    break;
+            }
+            if (p)
+                return p->data;
+            else
+                throw std::out_of_range("Index "+std::to_string(index)+" doesn't exist. Size is "+std::to_string(this->get_size())+".\n");
+        }
+        bool operator == (const LinkedList<T>& ll) const{
+            if(ll.size() != this->get_size()) return false;
+            for (uint64_t i=0; i<get_size(); ++i){
+                if ( (*this)[i]!=ll[i] )
+                    return false;
+            }
+            return true;
+        }
+        bool operator != (const LinkedList<T>& ll) const{
+            return not ((*this) == ll);
+        }
+        uint64_t get_size() const{
             return size;
         }
         Iterator first(){
@@ -152,3 +181,4 @@ namespace dsalib
 
     };
 }
+#endif
